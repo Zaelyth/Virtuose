@@ -1,17 +1,17 @@
 import { Resolver, Mutation, Args } from 'type-graphql';
 import { User } from '../../entities/User';
-import { CreateUserArgs } from './CreateUserArgs';
+import { CreateUserInput } from './CreateUserInput';
 
 @Resolver(User)
-class UserResolver {
+export class UserResolver {
   constructor() {}
 
   @Mutation(returns => User)
-  async createUser(@Args() { email, password, nickname }: CreateUserArgs) {
+  async createUser(@Args() { email, password, nickname }: CreateUserInput) {
     const user = User.create();
+    user.nickname = nickname;
     user.email = email;
     user.password = password;
-    user.nickname = nickname;
     return await user.save();
   }
 }

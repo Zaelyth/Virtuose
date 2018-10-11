@@ -4,6 +4,8 @@ import { buildSchema } from 'type-graphql';
 import { GraphQLSchema } from 'graphql';
 import { GraphQLServer, Options } from 'graphql-yoga';
 
+import { UserResolver } from './modules/users/UserResolver';
+
 export class App {
   private readonly port: any = process.env.port || 4000;
   private readonly serverConfig: Options = {
@@ -24,15 +26,16 @@ export class App {
 
   private async createSchema() {
     this.schema = await buildSchema({
-      resolvers: [__dirname + '/modules/**/*Resolver.ts']
+      resolvers: [UserResolver]
     });
+    console.log(this.schema);
   }
 
   private createServer() {
     this.server = new GraphQLServer({ schema: this.schema });
   }
 
-  public async startServer() {
+  public async start() {
     try {
       await this.createConnection();
       await this.createSchema();
