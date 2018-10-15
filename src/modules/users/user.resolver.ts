@@ -12,7 +12,7 @@ export class UserResolver {
 
   @Query(returns => User)
   async user(@Arg('id') id: string) {
-    return await User.find({ id });
+    return await User.findOne({ id });
   }
 
   @Mutation(returns => User)
