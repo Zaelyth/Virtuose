@@ -14,11 +14,15 @@ export class User extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ nullable: true, unique: true })
-  nickname?: string;
+  username?: string;
 
   @Field()
   @Column()
   password: string;
+
+  @Field(type => [String])
+  @Column('text', { array: true, default: '{"USER"}' })
+  roles: string[];
 
   @Field({ nullable: true })
   @Column({ nullable: true })
