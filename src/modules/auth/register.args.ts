@@ -10,5 +10,5 @@ export class RegisterArgs implements Partial<User> {
   password: string;
 
   @Field(type => String, { nullable: true })
-  username?: string;
+  username: string;
 }

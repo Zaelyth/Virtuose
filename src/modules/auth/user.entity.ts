@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, ID, Authorized } from 'type-graphql';
 
 @ObjectType()
 @Entity('users')
@@ -12,14 +12,15 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true, unique: true })
-  username?: string;
+  @Field()
+  @Column({ unique: true })
+  username: string;
 
   @Field()
   @Column()
   password: string;
 
+  @Authorized('ADMIN')
   @Field(type => [String])
   @Column('text', { array: true, default: '{"USER"}' })
   roles: string[];
