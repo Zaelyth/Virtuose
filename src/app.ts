@@ -1,28 +1,22 @@
 import 'reflect-metadata';
-import { createConnection, Connection } from 'typeorm';
 import { buildSchema } from 'type-graphql';
 import { GraphQLSchema } from 'graphql';
-import { GraphQLServer, Options } from 'graphql-yoga';
+import { GraphQLServer } from 'graphql-yoga';
+import { Connection, createConnection } from 'typeorm';
 
-import authMiddleware from './middlewares/auth.middleware';
+import authMiddleware from './modules/auth/auth.middleware';
 import { authChecker } from './modules/auth/authChecker';
 import { Context } from './models/context.model';
+import { variables } from './environments/environment';
 
 export class App {
-  private readonly port: any = process.env.port || 4000;
-  private readonly serverConfig: Options = {
-    port: this.port,
-    endpoint: '/',
-    playground: '/playground'
-  };
-
   private connection: Connection;
   private schema: GraphQLSchema;
   private server: GraphQLServer;
   private express: GraphQLServer['express'];
 
   private async createConnection() {
-    this.connection = await createConnection();
+    this.connection = await createConnection(variables.typeorm);
   }
 
   private async createSchema() {
@@ -49,7 +43,7 @@ export class App {
   }
 
   private addMiddlewares() {
-    this.express.use(this.serverConfig.endpoint || '/', authMiddleware);
+    this.express.use(variables.server.endpoint || '/', authMiddleware);
   }
 
   public async start() {
@@ -60,7 +54,7 @@ export class App {
       await this.addMiddlewares();
 
       await this.server.start(
-        this.serverConfig,
+        variables.server,
         ({ port, playground, endpoint }) => {
           console.log('Server started successfully !');
           console.log(`Endpoint at http://localhost:${port}${endpoint}`);
