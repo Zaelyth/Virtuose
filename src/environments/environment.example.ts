@@ -2,6 +2,9 @@ import { ConnectionOptions } from 'typeorm';
 import { Options } from 'graphql-yoga';
 
 export const variables = {
+  app: {
+    secret: 'COMPLEX_SECRET'
+  },
   server: <Options>{
     port: process.env.port || 4000,
     endpoint: '/',

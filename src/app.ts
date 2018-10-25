@@ -1,13 +1,20 @@
 import 'reflect-metadata';
-import { buildSchema } from 'type-graphql';
+import { buildSchema, useContainer as graphqlUseContainer } from 'type-graphql';
 import { GraphQLSchema } from 'graphql';
 import { GraphQLServer } from 'graphql-yoga';
-import { Connection, createConnection } from 'typeorm';
+import {
+  Connection,
+  createConnection,
+  useContainer as typeOrmUseContainer
+} from 'typeorm';
+import { Container } from 'typedi';
 
-import authMiddleware from './modules/auth/auth.middleware';
+import * as jwtMiddleware from 'express-jwt';
+
 import { authChecker } from './modules/auth/authChecker';
 import { Context } from './models/context.model';
 import { variables } from './environments/environment';
+import { AuthService } from './modules/auth/auth.service';
 
 export class App {
   private connection: Connection;
@@ -15,7 +22,12 @@ export class App {
   private server: GraphQLServer;
   private express: GraphQLServer['express'];
 
-  private async createConnection() {
+  private async initDependencyInjection() {
+    graphqlUseContainer(Container);
+    typeOrmUseContainer(Container);
+  }
+
+  private async createDatabaseConnection() {
     this.connection = await createConnection(variables.typeorm);
   }
 
@@ -43,12 +55,20 @@ export class App {
   }
 
   private addMiddlewares() {
-    this.express.use(variables.server.endpoint || '/', authMiddleware);
+    const authService = Container.get(AuthService);
+    this.express.use(
+      variables.server.endpoint || '/',
+      jwtMiddleware({
+        secret: variables.app.secret,
+        credentialsRequired: false
+      })
+    );
   }
 
   public async start() {
     try {
-      await this.createConnection();
+      await this.initDependencyInjection();
+      await this.createDatabaseConnection();
       await this.createSchema();
       await this.createServer();
       await this.addMiddlewares();
