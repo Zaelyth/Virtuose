@@ -16,11 +16,11 @@ export class User {
   @Column({ unique: true })
   username: string;
 
+  @Authorized('ADMIN')
   @Field()
   @Column()
   password: string;
 
-  @Authorized('ADMIN')
   @Field(type => [String])
   @Column('text', { array: true, default: '{"USER"}' })
   roles: string[];

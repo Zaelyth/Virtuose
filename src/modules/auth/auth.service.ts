@@ -15,11 +15,9 @@ export class AuthService {
       variables.app.secret
     );
   }
-
-  verifyToken(): middlware.RequestHandler {
-    return middlware({
-      secret: variables.app.secret,
-      credentialsRequired: false
-    });
-  }
 }
+
+export const authMiddleware = middlware({
+  secret: variables.app.secret,
+  credentialsRequired: false
+});

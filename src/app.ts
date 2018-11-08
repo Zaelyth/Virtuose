@@ -9,12 +9,10 @@ import {
 } from 'typeorm';
 import { Container } from 'typedi';
 
-import * as jwtMiddleware from 'express-jwt';
-
 import { authChecker } from './modules/auth/authChecker';
 import { Context } from './models/context.model';
 import { variables } from './environments/environment';
-import { AuthService } from './modules/auth/auth.service';
+import { authMiddleware } from './modules/auth/auth.service';
 
 export class App {
   private connection: Connection;
@@ -55,13 +53,9 @@ export class App {
   }
 
   private addMiddlewares() {
-    const authService = Container.get(AuthService);
     this.express.use(
       variables.server.endpoint || '/',
-      jwtMiddleware({
-        secret: variables.app.secret,
-        credentialsRequired: false
-      })
+      authMiddleware
     );
   }
 
