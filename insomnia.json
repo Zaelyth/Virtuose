@@ -1,7 +1,7 @@
 {
 	"_type": "export",
 	"__export_format": 3,
-	"__export_date": "2018-11-07T13:55:43.099Z",
+	"__export_date": "2018-11-08T12:31:37.320Z",
 	"__export_source": "insomnia.desktop.app:v6.0.2",
 	"resources": [
 		{
@@ -18,11 +18,12 @@
 			"color": null,
 			"created": 1541507459632,
 			"data": {
-				"baseUrl": "http://localhost:4000"
+				"baseUrl": "http://localhost:4000",
+				"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU0MTY3NjA2OH0.OTUs5UNEyKFTjDPkVYvWec8z7Bbtf3YwREy75aH_pX0"
 			},
 			"isPrivate": false,
 			"metaSortKey": 1541507459632,
-			"modified": 1541521577308,
+			"modified": 1541676126759,
 			"name": "New Environment",
 			"parentId": "wrk_2e8cb9154c454deaa2c692d65654a10e",
 			"_type": "environment"
@@ -58,7 +59,7 @@
 			},
 			"isPrivate": false,
 			"metaSortKey": 1541507532303,
-			"modified": 1541592636074,
+			"modified": 1541676124666,
 			"name": "DEV - User",
 			"parentId": "env_01e6ee8f5b834ec18a760f557ec67755",
 			"_type": "environment"
@@ -98,7 +99,7 @@
 			"isPrivate": false,
 			"metaSortKey": -1541507845022,
 			"method": "POST",
-			"modified": 1541593279364,
+			"modified": 1541676127280,
 			"name": "Login",
 			"parameters": [],
 			"parentId": "fld_b32976ed1b1849d0816c2924920028cf",
@@ -130,7 +131,7 @@
 			"isPrivate": false,
 			"metaSortKey": -1541521206875,
 			"method": "POST",
-			"modified": 1541593346649,
+			"modified": 1541676065173,
 			"name": "Register",
 			"parameters": [],
 			"parentId": "fld_b32976ed1b1849d0816c2924920028cf",
@@ -145,7 +146,11 @@
 		},
 		{
 			"_id": "req_d2d0199c046a463e86f8d6efe18ce710",
-			"authentication": {},
+			"authentication": {
+				"prefix": "",
+				"token": "{{ token  }}",
+				"type": "bearer"
+			},
 			"body": {
 				"mimeType": "application/graphql",
 				"text": "{\"query\":\"query {\\n\\tme {\\n\\t\\temail\\n\\t\\tusername\\n\\t\\troles\\n\\t}\\n}\"}"
@@ -157,17 +162,12 @@
 					"id": "pair_15ef9aa6b3ff414e8f4a6ff9b6dcc421",
 					"name": "Content-Type",
 					"value": "application/json"
-				},
-				{
-					"id": "pair_266a5ddcdbee4a5b8bd29659944922fd",
-					"name": "Authorization",
-					"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkbWluaXN0cmF0b3IiLCJyb2xlcyI6WyJBRE1JTiJdLCJpYXQiOjE1NDE1OTI5MjB9.6w8gosDQyPGJJEGSKZXTm0yI8fUh-Sf-ttP4hKqNG04"
 				}
 			],
 			"isPrivate": false,
 			"metaSortKey": -1541592946327,
 			"method": "POST",
-			"modified": 1541593325004,
+			"modified": 1541676132151,
 			"name": "Me",
 			"parameters": [],
 			"parentId": "fld_b32976ed1b1849d0816c2924920028cf",
@@ -184,7 +184,7 @@
 			"_id": "req_76876c0cb05a40459ab0014c9fae47aa",
 			"authentication": {
 				"prefix": "",
-				"token": "",
+				"token": "{{ token  }}",
 				"type": "bearer"
 			},
 			"body": {
@@ -198,17 +198,12 @@
 					"id": "pair_25203f7761ec4fa2b2634e3d07133d08",
 					"name": "Content-Type",
 					"value": "application/json"
-				},
-				{
-					"id": "pair_665126b1b61a40af9849b19a96d39cb3",
-					"name": "Authorization",
-					"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkbWluaXN0cmF0b3IiLCJyb2xlcyI6WyJBRE1JTiJdLCJpYXQiOjE1NDE1OTI5MjB9.6w8gosDQyPGJJEGSKZXTm0yI8fUh-Sf-ttP4hKqNG04"
 				}
 			],
 			"isPrivate": false,
 			"metaSortKey": -1541593291121,
 			"method": "POST",
-			"modified": 1541598876907,
+			"modified": 1541680283802,
 			"name": "Users",
 			"parameters": [],
 			"parentId": "fld_b32976ed1b1849d0816c2924920028cf",
