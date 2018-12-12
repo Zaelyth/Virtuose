@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { buildSchema, useContainer as graphqlUseContainer } from 'type-graphql';
+import * as express from 'express';
 import { GraphQLSchema } from 'graphql';
-import { GraphQLServer } from 'graphql-yoga';
+import { ApolloServer } from "apollo-server-express";
 import {
   Connection,
   createConnection,
@@ -12,13 +13,13 @@ import { Container } from 'typedi';
 import { authChecker } from './modules/auth/authChecker';
 import { Context } from './models/context.model';
 import { variables } from './environments/environment';
-import { authMiddleware } from './modules/auth/auth.service';
+import { AuthService, getUserFromHeader } from './modules/auth/auth.service';
 
 export class App {
   private connection: Connection;
   private schema: GraphQLSchema;
-  private server: GraphQLServer;
-  private express: GraphQLServer['express'];
+  private apollo: ApolloServer;
+  private server: express.Application;
 
   private async initDependencyInjection() {
     graphqlUseContainer(Container);
@@ -40,23 +41,17 @@ export class App {
   }
 
   private createServer() {
-    this.server = new GraphQLServer({
+    this.server = express();
+    this.apollo = new ApolloServer({
       schema: this.schema,
-      context: ({ request }) => {
+      context: ({ req }: any) => {
         return <Context>{
-          request,
-          user: request.user
+          request: req,
+          user: req.headers.authorization ? getUserFromHeader(req.headers.authorization) : null
         };
       }
     });
-    this.express = this.server.express;
-  }
-
-  private addMiddlewares() {
-    this.express.use(
-      variables.server.endpoint || '/',
-      authMiddleware
-    );
+    this.apollo.applyMiddleware({ app: this.server, path: '/' });
   }
 
   public async start() {
@@ -65,16 +60,10 @@ export class App {
       await this.createDatabaseConnection();
       await this.createSchema();
       await this.createServer();
-      await this.addMiddlewares();
 
-      await this.server.start(
-        variables.server,
-        ({ port, playground, endpoint }) => {
-          console.log('Server started successfully !');
-          console.log(`Endpoint at http://localhost:${port}${endpoint}`);
-          console.log(`Playground at http://localhost:${port}${playground}`);
-        }
-      );
+      await this.server.listen({ port: 4000 }, () => {
+        console.log(`🚀 Server ready at http://localhost:4000`);
+      });
     } catch (error) {
       console.error(error);
     }
